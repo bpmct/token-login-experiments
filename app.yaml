@@ -1,0 +1,35 @@
+# kubectl apply -f app.conf
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: customlogin-svc
+spec:
+  selector:
+    role: app
+  ports:
+    - protocol: TCP
+      port: 81
+      targetPort: 81
+      nodePort: 32001
+  type: NodePort
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: customlogin-deployment
+  labels:
+    role: app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      role: app
+  template:
+    metadata:
+      labels:
+        role: app
+    spec:
+      containers:
+        - name: app
+          image: "bencdr/sidecar:v9"
